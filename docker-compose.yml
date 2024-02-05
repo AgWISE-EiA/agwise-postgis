@@ -9,6 +9,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASS}
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
     ports:
       - "5050:80"
     depends_on:
