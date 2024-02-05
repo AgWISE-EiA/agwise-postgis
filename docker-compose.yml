@@ -15,6 +15,8 @@ services:
       - postgis
     links:
       - "postgis"
+    volumes:
+      - pg-admin:/var/lib/pgadmin
 
   postgis:
     container_name: postgis
@@ -23,7 +25,7 @@ services:
       POSTGRES_DB: agwise_db
       POSTGRES_PASSWORD: ${PG_PASS}
     volumes:
-    - pgdata:/var/lib/postgresql/data
+    - agwise-pg:/var/lib/postgresql/data
 
   dozzle:
     container_name: dozzle
@@ -38,4 +40,5 @@ services:
       - 9999:8080
 
 volumes:
-  pgdata:
+  agwise-pg:
+  pg-admin:
