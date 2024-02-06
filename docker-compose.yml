@@ -1,35 +1,32 @@
-version: '3'
+version: '3.1'
+name: "agwise-postgis"
 
 services:
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: mygisdb
-      POSTGRES_USER: mygisuser
-      POSTGRES_PASSWORD: mygispassword
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./data:/var/lib/postgresql/data
 
   pgadmin:
+    container_name: pgadmin
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: adminpassword
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASS}
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
     ports:
       - "5050:80"
     depends_on:
-      - db
+      - postgis
+    links:
+      - "postgis"
+    volumes:
+      - pg-admin:/var/lib/pgadmin
 
   postgis:
+    container_name: postgis
     image: postgis/postgis:16-3.4
     environment:
-      POSTGRES_DB: mygisdb
-      POSTGRES_USER: mygisuser
-      POSTGRES_PASSWORD: mygispassword
-    depends_on:
-      - db
+      POSTGRES_DB: agwise_db
+      POSTGRES_PASSWORD: ${PG_PASS}
+    volumes:
+    - agwise-pg:/var/lib/postgresql/data
 
   dozzle:
     container_name: dozzle
@@ -42,3 +39,7 @@ services:
       DOZZLE_HOSTNAME: 'munywele.co.ke'
     ports:
       - 9999:8080
+
+volumes:
+  agwise-pg:
+  pg-admin:
